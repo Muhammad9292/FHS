@@ -2,16 +2,15 @@
 import copy
 import datetime
 import math
-import random
 
 
 
 
-def würfeln1():
+def würfeln():
     p=(random.randint(1, 6),random.randint(1, 6),random.randint(1, 6),random.randint(1, 6),random.randint(1, 6))
     return p
 
-def avil1(List):
+def avil(List):
     avail=[]
     for col, z in enumerate(List[0][0:13:1]):
         if z != 0:
@@ -27,7 +26,7 @@ def avil1(List):
             avail.append((2, col))
             break
     return avail
-def get_reward1 (dice,action):
+def get_reward (dice,action):
     Würfel=list(dice)
     Würfel.sort()
 
@@ -142,30 +141,125 @@ def get_reward1 (dice,action):
     else:
             return 0
 
-def simulate1(state):
+def simulate(state):
     List= copy.deepcopy(state[0])
     dice=state[1]
     action=state[2]
-    sumall=get_reward1(dice,action)
+    sumall=get_reward(dice,action)
     r,c=action
     List[r][c] = 0
     n=0
     for _ in range(150):
         n +=1
-        dice=würfeln1()
-        available=avil1(List)
+        dice=würfeln()
+        available=avil(List)
         if not available:
                 break
         else:
             action=random.choice(available)
-            sumall += get_reward1(dice,action)
+            sumall += get_reward(dice,action)
             r,c=action
             List[r][c] = 0
     return sumall
 
+import random
+import math
+
+
+class Node:
+    def __init__(self, state, parent=None):
+        self.state = state
+        self.parent = parent
+        self.children = []
+        self.visits = 0
+        self.value = 0
+
+def mcts(root, iterations,l):
+    l+=1
+    for _ in range(iterations):
+        node = select(root)
+        reward = simulate(node.state)
+        backpropagate(node, reward)
+        
 
 
 
+    best_child = best_child_ucb(root, 0)
+    return best_child
+
+def select(node):
+    node = random.choice(node.children)
+    return node
+
+def backpropagate(node, reward):
+    while node:
+        node.visits += 1
+        node.value += reward
+        node = node.parent
+
+def best_child_ucb(node, exploration_weight):
+    children = sorted(node.children, 
+                      
+                    key=lambda x: 
+                      
+                    x.value / x.visits + exploration_weight * math.sqrt(math.log(node.visits) / x.visits), reverse=True)
+    
+
+    
+    return children[0]
+print('ok')
+
+
+
+
+
+
+
+
+
+
+dice_all=[(6, 6, 4, 6, 3), (1, 2, 2, 4, 5), (6, 2, 4, 2, 3), (3, 3, 6, 2, 4), (5, 3, 2, 5, 2), (4, 3, 5, 6, 6), (5, 5, 2, 6, 3), (1, 3, 6, 2, 1), (5, 3, 4, 1, 2), (6, 3, 4, 4, 4), (5, 5, 5, 3, 1), (3, 4, 5, 6, 6), (4, 2, 3, 3, 4), (1, 1, 3, 1, 6), (2, 2, 4, 3, 3), (1, 6, 3, 4, 5), (4, 4, 6, 4, 1), (3, 3, 6, 2, 4), (1, 1, 2, 2, 4), (3, 6, 2, 3, 5), (4, 1, 3, 5, 2), (6, 2, 3, 2, 6), (1, 4, 5, 3, 4), (3, 4, 1, 1, 3), (1, 6, 3, 3, 2), (1, 4, 1, 3, 3), (2, 6, 5, 2, 6), (4, 1, 1, 1, 5), (6, 6, 5, 6, 2), (4, 3, 3, 6, 2), (1, 3, 2, 1, 6), (2, 6, 6, 4, 6), (3, 3, 4, 5, 2), (3, 1, 3, 5, 6), (3, 2, 3, 5, 1), (6, 3, 3, 3, 2), (4, 5, 6, 1, 4), (5, 5, 3, 2, 4), (4, 2, 2, 2, 6), (6, 5, 2, 1, 2), (1, 6, 5, 2, 6), (3, 4, 1, 2, 5), (3, 3, 2, 5, 4), (2, 6, 1, 6, 1), (2, 1, 4, 4, 3), (5, 5, 6, 5, 4), (2, 4, 1, 6, 1), (5, 3, 6, 6, 4), (4, 1, 1, 1, 4), (1, 1, 2, 1, 1), (4, 6, 2, 4, 1), (6, 2, 6, 6, 1), (2, 2, 6, 5, 6), (2, 1, 1, 2, 1), (2, 1, 4, 4, 3), (5, 5, 1, 6, 4), (5, 5, 1, 3, 5), (1, 1, 4, 6, 3), (3, 6, 6, 4, 6), (4, 2, 6, 2, 2), (3, 4, 4, 2, 5), (4, 4, 6, 5, 4), (4, 4, 4, 6, 3), (3, 4, 2, 4, 1), (4, 2, 4, 6, 3), (6, 2, 5, 1, 4), (5, 1, 6, 2, 3), (3, 5, 4, 4, 3), (2, 1, 1, 2, 5), (4, 3, 6, 5, 4), (4, 6, 6, 2, 2), (3, 3, 3, 5, 2), (4, 3, 2, 3, 5), (1, 1, 2, 4, 5), (4, 2, 6, 4, 6), (6, 3, 4, 3, 6), (5, 6, 5, 1, 2), (3, 4, 3, 5, 5), (3, 1, 4, 5, 3), (5, 6, 5, 1, 1), (2, 5, 3, 5, 1), (2, 3, 6, 5, 4), (4, 1, 5, 4, 3), (6, 2, 3, 1, 3), (1, 4, 3, 3, 5), (4, 5, 6, 5, 2), (5, 2, 3, 2, 1), (3, 2, 4, 6, 1), (5, 2, 1, 3, 6), (4, 1, 5, 1, 3), (3, 5, 3, 4, 6), (5, 3, 6, 6, 3), (5, 3, 5, 4, 3), (4, 3, 4, 2, 1), (5, 6, 2, 3, 1), (6, 6, 3, 3, 4), (5, 4, 4, 4, 1), (6, 1, 5, 4, 4), (3, 4, 1, 3, 3), (3, 1, 5, 1, 5)]
+state=[[[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1]],[1,3,2,6,5],[0,1]]
+root=Node(state)
+root.state[1]=dice_all[0]
+List=state[0]
+available=avil(List)
+current_time = datetime.datetime.now()  
+turns=0
+sumall=0
+for _ in range(150):
+    turns +=1
+    for child in available:
+    # Create a deep copy of the state for each child node
+        child_state = copy.deepcopy(root.state)
+        child_state[2] = child
+    
+        child_node = Node(child_state)
+        root.children.append(child_node)
+    
+    root.visits =1
+    chosen_state = mcts(root, 200000,0)
+
+    action=chosen_state.state[2]
+    dice=root.state[1]
+    root=Node(chosen_state.state)
+    root.state[2]=action
+    rewae=get_reward(dice,action)
+    sumall +=rewae
+
+    print(root.state,rewae, sumall)
+    r,c=action
+    
+    List[r][c] = 0
+    root.state[0]=List
+    root.state[1]=dice_all[turns]
+    available=avil(List)
+    if not available:
+         print(turns)
+         break
+
+current_time = datetime.datetime.now() - current_time
+print('Game 1 is finished with total of:', sumall, 'and time is:',current_time)
 
 
 

@@ -1,4 +1,3 @@
-
 import copy
 import datetime
 import math
@@ -304,49 +303,123 @@ def best_child_ucb(node, exploration_weight):
 
     
     return children[0]
-print('Start')
+print('Start:')
 
-dice_all=[(6, 6, 4, 6, 3), (1, 2, 2, 4, 5), (6, 2, 4, 2, 3), (3, 3, 6, 2, 4), (5, 3, 2, 5, 2), (4, 3, 5, 6, 6), (5, 5, 2, 6, 3), (1, 3, 6, 2, 1), (5, 3, 4, 1, 2), (6, 3, 4, 4, 4), (5, 5, 5, 3, 1), (3, 4, 5, 6, 6), (4, 2, 3, 3, 4), (1, 1, 3, 1, 6), (2, 2, 4, 3, 3), (1, 6, 3, 4, 5), (4, 4, 6, 4, 1), (3, 3, 6, 2, 4), (1, 1, 2, 2, 4), (3, 6, 2, 3, 5), (4, 1, 3, 5, 2), (6, 2, 3, 2, 6), (1, 4, 5, 3, 4), (3, 4, 1, 1, 3), (1, 6, 3, 3, 2), (1, 4, 1, 3, 3), (2, 6, 5, 2, 6), (4, 1, 1, 1, 5), (6, 6, 5, 6, 2), (4, 3, 3, 6, 2), (1, 3, 2, 1, 6), (2, 6, 6, 4, 6), (3, 3, 4, 5, 2), (3, 1, 3, 5, 6), (3, 2, 3, 5, 1), (6, 3, 3, 3, 2), (4, 5, 6, 1, 4), (5, 5, 3, 2, 4), (4, 2, 2, 2, 6), (6, 5, 2, 1, 2), (1, 6, 5, 2, 6), (3, 4, 1, 2, 5), (3, 3, 2, 5, 4), (2, 6, 1, 6, 1), (2, 1, 4, 4, 3), (5, 5, 6, 5, 4), (2, 4, 1, 6, 1), (5, 3, 6, 6, 4), (4, 1, 1, 1, 4), (1, 1, 2, 1, 1), (4, 6, 2, 4, 1), (6, 2, 6, 6, 1), (2, 2, 6, 5, 6), (2, 1, 1, 2, 1), (2, 1, 4, 4, 3), (5, 5, 1, 6, 4), (5, 5, 1, 3, 5), (1, 1, 4, 6, 3), (3, 6, 6, 4, 6), (4, 2, 6, 2, 2), (3, 4, 4, 2, 5), (4, 4, 6, 5, 4), (4, 4, 4, 6, 3), (3, 4, 2, 4, 1), (4, 2, 4, 6, 3), (6, 2, 5, 1, 4), (5, 1, 6, 2, 3), (3, 5, 4, 4, 3), (2, 1, 1, 2, 5), (4, 3, 6, 5, 4), (4, 6, 6, 2, 2), (3, 3, 3, 5, 2), (4, 3, 2, 3, 5), (1, 1, 2, 4, 5), (4, 2, 6, 4, 6), (6, 3, 4, 3, 6), (5, 6, 5, 1, 2), (3, 4, 3, 5, 5), (3, 1, 4, 5, 3), (5, 6, 5, 1, 1), (2, 5, 3, 5, 1), (2, 3, 6, 5, 4), (4, 1, 5, 4, 3), (6, 2, 3, 1, 3), (1, 4, 3, 3, 5), (4, 5, 6, 5, 2), (5, 2, 3, 2, 1), (3, 2, 4, 6, 1), (5, 2, 1, 3, 6), (4, 1, 5, 1, 3), (3, 5, 3, 4, 6), (5, 3, 6, 6, 3), (5, 3, 5, 4, 3), (4, 3, 4, 2, 1), (5, 6, 2, 3, 1), (6, 6, 3, 3, 4), (5, 4, 4, 4, 1), (6, 1, 5, 4, 4), (3, 4, 1, 3, 3), (3, 1, 5, 1, 5)]
-state=[[[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1]],[1,3,2,6,5],[0,1]]
-root=Node(state)
-root.state[1]=dice_all[0]
-List=state[0]
-available=avil(List)
-current_time = datetime.datetime.now()  
-turns=0
-sumall=0
-for _ in range(150):
-    turns +=1
-    for child in available:
-    # Create a deep copy of the state for each child node
-        child_state = copy.deepcopy(root.state)
-        child_state[2] = child
+
+
+
+
+
+
+def get_user_input():
+    numbers = []
     
-        child_node = Node(child_state)
-        root.children.append(child_node)
-    
-    root.visits =1
-    chosen_state = mcts(root, 50000,0)
+    while True:
+        user_input = input("Enter five numbers of the dices separated by spaces: ")
+        
+        if user_input.lower() == 'finish':
+            break
+        
+        # Split the input string by spaces
+        input_numbers = user_input.split()
+        
+        # Check if the number of input numbers is not exactly five
+        if len(input_numbers) == 5:
+            
+            try:
+                for num_str in input_numbers:
+                    number = int(num_str)
+                    numbers.append(number)
+      
+                state=[[[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1]],[1,3,2,6,5],[0,1]]
+                root=Node(state)
+                root.state[1]=numbers
+                List=state[0]
+                available=avil(List)
+                current_time = datetime.datetime.now()  
+                turns=0
+                sumall=0
+                replay=0
+                for _ in range(150):
+                    numbers = []
+                    turns +=1
+                    for child in available:
+                    # Create a deep copy of the state for each child node
+                        child_state = copy.deepcopy(root.state)
+                        child_state[2] = child
+                    
+                        child_node = Node(child_state)
+                        root.children.append(child_node)
+                    
+                    root.visits =1
+                    chosen_state = mcts(root, 50000,0)
 
-    action=chosen_state.state[2]
-    dice=root.state[1]
-    root=Node(chosen_state.state)
-    root.state[2]=action
-    rewae=get_reward(dice,action)
-    sumall +=rewae
+                    action=chosen_state.state[2]
+                    dice=root.state[1]
+                    
+                    rewae=get_reward(dice,action)
+                    if rewae==0 and replay<2:
+                        replay+=1
+                        print('skip')
+                        
 
-    print(root.state,rewae, sumall)
-    r,c=action
-    
-    List[r][c] = 0
-    root.state[0]=List
-    root.state[1]=dice_all[turns]
-    available=avil(List)
-    if not available:
-         print(turns)
-         break
+                        user_input = input("skip please! Enter five numbers of the dices separated by spaces: ")
+        
+                        if user_input.lower() == 'finish':
+                             break
+        
+                        input_numbers = user_input.split()
+        
+                        if len(input_numbers) == 5:
+                            for num_str in input_numbers:
+                                number = int(num_str)
+                                numbers.append(number)
+                            root.state[1]=numbers
 
-current_time = datetime.datetime.now() - current_time
-print('Game 2 is finished with total of:', sumall, 'and time is:',current_time)
+
+                    else:
+                        replay=0
+                        root=Node(chosen_state.state)
+                        root.state[2]=action  
+                        sumall +=rewae
+
+                        print(root.state,rewae, sumall)
+                        r,c=action
+                        user_input = input("Enter five numbers of the dices separated by spaces: ")
+        
+        
+                        input_numbers = user_input.split()
+        
+                        if len(input_numbers) == 5:
+                            for num_str in input_numbers:
+                                number = int(num_str)
+                                numbers.append(number)
+                        List[r][c] = 0
+                        root.state[0]=List
+                        root.state[1]=numbers
+                        available=avil(List)
+                        if not available:
+                            print(turns)
+                            break
+                        
+
+                current_time = datetime.datetime.now() - current_time
+                print('/nGame 3 is finished with total of:', sumall, 'and time is:',current_time)
+
+
+
+
+
+            except ValueError:
+                print("Error: Please enter valid numbers.")
+                continue
+            print(numbers)
+        else:
+            print("Error: Please enter exactly five numbers separated by spaces.")
+            continue
+        
+
+get_user_input()  # Start the loop
+
 
 

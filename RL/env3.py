@@ -304,7 +304,16 @@ def best_child_ucb(node, exploration_weight):
 
     
     return children[0]
-print('Start')
+print('Start:')
+
+
+
+
+
+
+
+
+
 
 dice_all=[(6, 6, 4, 6, 3), (1, 2, 2, 4, 5), (6, 2, 4, 2, 3), (3, 3, 6, 2, 4), (5, 3, 2, 5, 2), (4, 3, 5, 6, 6), (5, 5, 2, 6, 3), (1, 3, 6, 2, 1), (5, 3, 4, 1, 2), (6, 3, 4, 4, 4), (5, 5, 5, 3, 1), (3, 4, 5, 6, 6), (4, 2, 3, 3, 4), (1, 1, 3, 1, 6), (2, 2, 4, 3, 3), (1, 6, 3, 4, 5), (4, 4, 6, 4, 1), (3, 3, 6, 2, 4), (1, 1, 2, 2, 4), (3, 6, 2, 3, 5), (4, 1, 3, 5, 2), (6, 2, 3, 2, 6), (1, 4, 5, 3, 4), (3, 4, 1, 1, 3), (1, 6, 3, 3, 2), (1, 4, 1, 3, 3), (2, 6, 5, 2, 6), (4, 1, 1, 1, 5), (6, 6, 5, 6, 2), (4, 3, 3, 6, 2), (1, 3, 2, 1, 6), (2, 6, 6, 4, 6), (3, 3, 4, 5, 2), (3, 1, 3, 5, 6), (3, 2, 3, 5, 1), (6, 3, 3, 3, 2), (4, 5, 6, 1, 4), (5, 5, 3, 2, 4), (4, 2, 2, 2, 6), (6, 5, 2, 1, 2), (1, 6, 5, 2, 6), (3, 4, 1, 2, 5), (3, 3, 2, 5, 4), (2, 6, 1, 6, 1), (2, 1, 4, 4, 3), (5, 5, 6, 5, 4), (2, 4, 1, 6, 1), (5, 3, 6, 6, 4), (4, 1, 1, 1, 4), (1, 1, 2, 1, 1), (4, 6, 2, 4, 1), (6, 2, 6, 6, 1), (2, 2, 6, 5, 6), (2, 1, 1, 2, 1), (2, 1, 4, 4, 3), (5, 5, 1, 6, 4), (5, 5, 1, 3, 5), (1, 1, 4, 6, 3), (3, 6, 6, 4, 6), (4, 2, 6, 2, 2), (3, 4, 4, 2, 5), (4, 4, 6, 5, 4), (4, 4, 4, 6, 3), (3, 4, 2, 4, 1), (4, 2, 4, 6, 3), (6, 2, 5, 1, 4), (5, 1, 6, 2, 3), (3, 5, 4, 4, 3), (2, 1, 1, 2, 5), (4, 3, 6, 5, 4), (4, 6, 6, 2, 2), (3, 3, 3, 5, 2), (4, 3, 2, 3, 5), (1, 1, 2, 4, 5), (4, 2, 6, 4, 6), (6, 3, 4, 3, 6), (5, 6, 5, 1, 2), (3, 4, 3, 5, 5), (3, 1, 4, 5, 3), (5, 6, 5, 1, 1), (2, 5, 3, 5, 1), (2, 3, 6, 5, 4), (4, 1, 5, 4, 3), (6, 2, 3, 1, 3), (1, 4, 3, 3, 5), (4, 5, 6, 5, 2), (5, 2, 3, 2, 1), (3, 2, 4, 6, 1), (5, 2, 1, 3, 6), (4, 1, 5, 1, 3), (3, 5, 3, 4, 6), (5, 3, 6, 6, 3), (5, 3, 5, 4, 3), (4, 3, 4, 2, 1), (5, 6, 2, 3, 1), (6, 6, 3, 3, 4), (5, 4, 4, 4, 1), (6, 1, 5, 4, 4), (3, 4, 1, 3, 3), (3, 1, 5, 1, 5)]
 state=[[[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1]],[1,3,2,6,5],[0,1]]
@@ -315,6 +324,7 @@ available=avil(List)
 current_time = datetime.datetime.now()  
 turns=0
 sumall=0
+replay=0
 for _ in range(150):
     turns +=1
     for child in available:
@@ -330,23 +340,31 @@ for _ in range(150):
 
     action=chosen_state.state[2]
     dice=root.state[1]
-    root=Node(chosen_state.state)
-    root.state[2]=action
-    rewae=get_reward(dice,action)
-    sumall +=rewae
-
-    print(root.state,rewae, sumall)
-    r,c=action
     
-    List[r][c] = 0
-    root.state[0]=List
-    root.state[1]=dice_all[turns]
-    available=avil(List)
-    if not available:
-         print(turns)
-         break
+    rewae=get_reward(dice,action)
+    if rewae==0 and replay<2:
+        replay+=1
+        root.state[1]=würfeln()
+        print('skip')
+    else:
+        replay=0
+        root=Node(chosen_state.state)
+        root.state[2]=action  
+        sumall +=rewae
+
+        print(root.state,rewae, sumall)
+        r,c=action
+        
+        List[r][c] = 0
+        root.state[0]=List
+        root.state[1]=dice_all[turns]
+        available=avil(List)
+        if not available:
+            print(turns)
+            break
 
 current_time = datetime.datetime.now() - current_time
-print('Game 2 is finished with total of:', sumall, 'and time is:',current_time)
+print('Game 3 is finished with total of:', sumall, 'and time is:',current_time)
+
 
 
